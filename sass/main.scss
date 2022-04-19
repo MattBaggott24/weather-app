@@ -10,7 +10,7 @@ body {
     height: 100vh;
     background-color: #222;
     font-family: 'Open Sans', sans-serif;
-    background-image: url("https://source.unsplash.com/1600x900/?landscape");
+    background-image: url("https://source.unsplash.com/1600x900/?landscape"); //random image search for "landscape"
     font-size: 120%;
     transition: .5s fade;
 }
@@ -91,7 +91,7 @@ button {
 
 .weather.loading::after {
     visibility: visible;
-    content: "Loading...";
+    content: "Loading..."; //displays loading when the weather information and description are loading
     color: white;
     position: absolute;
     top: 0;
