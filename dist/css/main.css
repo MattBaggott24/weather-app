@@ -115,8 +115,13 @@ button:hover {
 }
 
 .toggle {
+  background-color: #171717d0;
   position: absolute;
   top: 2.5%;
   left: 95%;
+}
+
+.toggle:hover {
+  background-color: #1818188d;
 }
 /*# sourceMappingURL=main.css.map */

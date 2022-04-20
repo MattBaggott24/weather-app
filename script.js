@@ -1,45 +1,50 @@
-let unitTemp = localStorage.getItem("unit");
+// let unitTemp = localStorage.getItem("unit");
 let unitArr; //array to switch degrees or farenheit
 
 window.onload = function () {
     //TODO fix this
 
-    if (localStorage.getItem("unit") == null) {
-        unitArr = ["F", "C"];
-    }
+    // if (localStorage.getItem("unit") == null) {
+    //     unitArr = ["C", "F"];
+    // } else {
+    //     unitArr = JSON.stringify(localStorage.getItem("unit"));
+    // }
+    unitArr = localStorage.getItem("unit");
 
-    console.log(unitTemp);
-    if (unitTemp[0] == "C") {
+    console.log("localstorage on load: " + localStorage.getItem("unit"));
+
+    console.log("unitArr on load:" + unitArr);
+    if (unitArr[0] == "C") {
         unitArr = ["C", "F"];
     } else {
         unitArr = ["F", "C"];
     }
+    document.querySelector(".toggle").textContent = unitArr[0];
+
+    weather.fetchWeather("London");
+
 };
 
 
 //creates weather object
 let weather = {
     apiKey: "fbced54f0bc1e9c84611024f01eb58f0", //defines the api from my account
-    // unit: "imperial",
-    unit: function () { //changes the unit that is displayed 
-        //TODO: set it to change speed unit
-        if (getUnit() == "F") {
-            return "imperial";
+    fetchWeather: function (city) { //uses the search api with the corresponding values to fetch the data
+        console.log("unitArr in object" + unitArr);
+        if (localStorage.getItem("unit")[0] == "C") {
+            fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=metric" + "&appid=" + this.apiKey).then((response) => response.json()).then((data) => this.displayWeather(data));
         } else {
-            return "metric";
+            fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=imperial" + "&appid=" + this.apiKey).then((response) => response.json()).then((data) => this.displayWeather(data));
         }
     },
-    fetchWeather: function (city) { //uses the search api with the corresponding values to fetch the data
-        fetch("https://api.openweathermap.org/data/2.5/weather?q=" + city + "&units=" + this.unit() + "&appid=" + this.apiKey).then((response) => response.json()).then((data) => this.displayWeather(data));
-    },
-    displayWeather: function (data) { //function to display the weather data
+    displayWeather: function (data) {
         const {
             name
         } = data;
         const {
             icon,
             description
-        } = data.weather[0]; //defines values from the json file that is returned
+        } = data.weather[0];
         const {
             temp,
             humidity
@@ -47,24 +52,30 @@ let weather = {
         const {
             speed
         } = data.wind;
-        console.log(name, icon, description, temp, speed);
-        document.querySelector(".city").innerText = "Weather in " + name; //rewrite the details according to the data recieved
-        document.querySelector(".icon").src = "https://openweathermap.org/img/wn/" + icon + "@2x.png";
+        document.querySelector(".city").innerText = "Weather in " + name;
+        document.querySelector(".icon").src =
+            "https://openweathermap.org/img/wn/" + icon + ".png";
         document.querySelector(".description").innerText = description;
         document.querySelector(".temp").innerText = temp + "°" + unitArr[0];
-        document.querySelector(".humidity").innerText = "Humidity: " + humidity + "%";
-        document.querySelector(".wind").innerText = "Wind Speed: " + speed + "m/s";
+        document.querySelector(".humidity").innerText =
+            "Humidity: " + humidity + "%";
+        if (unitArr[0] == "C") {
+            document.querySelector(".wind").innerText = "Wind speed: " + speed + " m/s";
+        } else {
+            document.querySelector(".wind").innerText = "Wind speed: " + speed + " mph";
+        }
         document.querySelector(".weather").classList.remove("loading");
-        document.body.style.backgroundImage = "url('https://source.unsplash.com/1600x900/?" + name + "')";
+        document.body.style.backgroundImage =
+            "url('https://source.unsplash.com/1600x900/?" + name + "')";
     },
     search: function () {
         this.fetchWeather(document.querySelector(".search-bar").value); //uses the inputted text to search for the data
     }
 };
 
+
 document.querySelector(".search button").addEventListener("click", () => {
     weather.search(); //searches on button click
-    console.log(getUnit());
 });
 
 document.querySelector(".search-bar").addEventListener("keyup", function (event) {
@@ -74,17 +85,15 @@ document.querySelector(".search-bar").addEventListener("keyup", function (event)
 });
 
 document.querySelector(".toggle").addEventListener("click", () => {
-    // window.location.reload();
     document.querySelector(".toggle").textContent = unitArr[1];
     [unitArr[0], unitArr[1]] = [unitArr[1], unitArr[0]]; //swaps array around
     localStorage.setItem("unit", unitArr);
-    console.log(unitArr[0]);
-    // weather.search();
+    console.log("on toggle switch:" + unitArr[0]);
+
+    if (document.querySelector(".search-bar").value == "") {
+        // document.location.reload();
+        weather.fetchWeather("London");
+    } else {
+        weather.search();
+    }
 });
-
-function getUnit() {
-    return localStorage.getItem("unit");
-
-}
-
-weather.fetchWeather("London");
