@@ -1,14 +1,6 @@
-// let unitTemp = localStorage.getItem("unit");
 let unitArr; //array to switch degrees or farenheit
 
 window.onload = function () {
-    //TODO fix this
-
-    // if (localStorage.getItem("unit") == null) {
-    //     unitArr = ["C", "F"];
-    // } else {
-    //     unitArr = JSON.stringify(localStorage.getItem("unit"));
-    // }
     unitArr = localStorage.getItem("unit");
 
     console.log("localstorage on load: " + localStorage.getItem("unit"));
