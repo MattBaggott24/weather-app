@@ -1,5 +1,8 @@
 let unitArr; //array to switch degrees or farenheit
 
+console.log(window.screen.height);
+console.log(window.screen.width);
+
 window.onload = function () {
 	if (localStorage.getItem("unit") == null) {
 		localStorage.setItem("unit", "C");
@@ -80,7 +83,13 @@ let weather = {
 		}
 		document.querySelector(".weather").classList.remove("loading");
 		document.body.style.backgroundImage =
-			"url('https://source.unsplash.com/1600x900/?" + name + "')";
+			"url('https://source.unsplash.com/" +
+			window.screen.width +
+			"x" +
+			window.screen.height +
+			"/?" +
+			name +
+			"')";
 	},
 	search: function () {
 		this.fetchWeather(document.querySelector(".search-bar").value); //uses the inputted text to search for the data
